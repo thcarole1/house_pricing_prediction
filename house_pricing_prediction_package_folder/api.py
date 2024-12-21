@@ -1,5 +1,12 @@
+# Import libraries
 from fastapi import FastAPI
+import pandas as pd
 
+# Import from api py files
+from house_pricing_prediction_package_folder.api_functions.data_api import create_X
+from house_pricing_prediction_package_folder.api_functions.model_api import get_model_api
+
+# Instantiate api
 app = FastAPI()
 
 # Define a root `/` endpoint
@@ -18,6 +25,26 @@ def essai(longitude : float,
           households : int,
           median_income : float,
           ocean_proximity : str):
-    return longitude, latitude, housing_median_age,\
-          total_rooms, total_bedrooms,population,\
-          households, median_income, ocean_proximity
+    # Create X (features)
+    X = create_X(longitude, latitude, housing_median_age,
+          total_rooms, total_bedrooms,population,households,
+          median_income, ocean_proximity)
+
+    # Get the model to use
+    final_model = get_model_api()
+
+    # Predict
+    prediction = final_model.predict(X)
+    print("✅ predictions has been calculated")
+    prediction = [round(pred, 2) for pred in prediction]
+
+    # Create a prediction dataframe
+    predictions_df = pd.DataFrame({"prediction" : prediction})
+
+    # Concatenate X and prediction as result
+    result = pd.concat([X,predictions_df], axis = 1)
+
+    result_json = result.to_json(path_or_buf = "data/processed_data/test.json")
+    print(result_json)
+
+    return 'result OK'
