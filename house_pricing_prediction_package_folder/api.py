@@ -1,5 +1,6 @@
 # Import libraries
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 import pandas as pd
 
 # Import from api py files
@@ -14,9 +15,8 @@ app = FastAPI()
 def index():
     return {'New project': 'This is the first app of my new project !'}
 
-
-@app.post("/test")
-def essai(longitude : float,
+@app.post("/predict")
+def predict_func(longitude : float,
           latitude : float,
           housing_median_age : int,
           total_rooms : int,
@@ -44,7 +44,7 @@ def essai(longitude : float,
     # Concatenate X and prediction as result
     result = pd.concat([X,predictions_df], axis = 1)
 
-    result_json = result.to_json(path_or_buf = "data/processed_data/test.json")
-    print(result_json)
+    result.to_json(path_or_buf = "data/processed_data/prediction_response.json")
 
-    return 'result OK'
+    file_path = "data/processed_data/prediction_response.json"  # Path to your JSON file
+    return FileResponse(file_path, media_type="application/json", filename="prediction_response.json")
