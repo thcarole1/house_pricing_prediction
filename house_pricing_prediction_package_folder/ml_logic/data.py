@@ -4,7 +4,6 @@ import pandas as pd
 import tarfile
 import urllib.request
 
-
 def load_housing_data():
     # Retrieve the data
     tarball_path = Path("../data/raw_data/datasets/housing.tgz")

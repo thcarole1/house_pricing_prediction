@@ -6,9 +6,6 @@ from ml_logic.model import get_model
 # Import libraries
 from sklearn.pipeline import make_pipeline
 
-def say_hello():
-    print('Hello World !')
-
 def predict_house_price(number):
     # Retrieve housing data
     housing = load_housing_data()
@@ -27,12 +24,9 @@ def predict_house_price(number):
     predictions = [round(prediction, 2) for prediction in predictions]
     print(predictions)
 
-
 if __name__ == '__main__':
     try:
-    #    say_hello()
        predict_house_price(2)
-
 
     except:
         import sys
